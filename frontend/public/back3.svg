@@ -1,0 +1,29 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100%" height="100%" fill="#f5f5dc"/> <!-- Beige background -->
+
+  <path d="M50,900 C200,600 600,700 900,400 S1500,200 1850,500" 
+        fill="none" stroke="darkgreen" stroke-width="18"/>
+  <path d="M100,850 C300,500 700,900 1100,600 S1700,400 1900,750" 
+        fill="none" stroke="green" stroke-width="16"/>
+  
+
+  <path d="M200,950 C500,500 800,1000 1300,500 S1700,200 1900,550" 
+        fill="none" stroke="forestgreen" stroke-width="12"/>
+  <path d="M100,100 C500,400 1000,200 1400,700 S1800,900 1900,650" 
+        fill="none" stroke="seagreen" stroke-width="10"/>
+  
+  <circle cx="300" cy="400" r="45" fill="darkorange"/>
+  <circle cx="800" cy="700" r="55" fill="goldenrod"/>
+  <circle cx="1500" cy="300" r="50" fill="orange"/>
+  
+
+  <ellipse cx="250" cy="450" rx="40" ry="20" fill="green" transform="rotate(30 250 450)"/>
+  <ellipse cx="600" cy="750" rx="50" ry="25" fill="darkgreen" transform="rotate(-20 600 750)"/>
+  <ellipse cx="1300" cy="500" rx="30" ry="15" fill="green" transform="rotate(40 1300 500)"/>
+
+
+  <path d="M100,50 C400,200 800,50 1200,200 S1600,400 1850,100" 
+        fill="none" stroke="darkgreen" stroke-width="10"/>
+  <path d="M100,1030 C500,900 900,1050 1300,900 S1700,700 1900,950" 
+        fill="none" stroke="darkgreen" stroke-width="10"/>
+</svg>
