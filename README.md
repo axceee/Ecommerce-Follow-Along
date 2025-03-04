@@ -47,3 +47,17 @@ Authentication validates user identities before granting access to restricted fe
 
 This marks the beginning of an exciting journey into full-stack e-commerce development. Get ready to dive deeper into the technical aspects! 🚀
 
+## Milestone 3: Backend Setup, Database Integration & Error Handling
+
+In Milestone 3, the focus shifted towards establishing a robust backend infrastructure. Key progress includes:
+
+- **Backend Folder Structure**: Organized folders and files for routes, controllers, models, and middleware, ensuring scalable and maintainable code organization.
+- **Server Setup**: Initialized a Node.js server using Express.js to handle API requests, configured to listen on a designated port.
+- **Database Connection**: Connected the application to MongoDB for efficient data storage and management. The connection is confirmed through a dedicated configuration in the backend.
+- **Error Handling**: Implemented basic error-handling mechanisms within the server to provide clear, useful error messages for smoother debugging and user feedback.
+
+This milestone solidifies the backend foundation, paving the way for more advanced features as the project evolves.
+
+## Project Submission
+
+Push your code changes to the same GitHub repository from previous milestones and ensure that your repository remains publicly accessible.

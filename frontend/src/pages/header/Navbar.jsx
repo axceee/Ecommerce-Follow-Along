@@ -1,26 +1,4 @@
-// import { NavLink } from "react-router-dom"
 
-// function Navbar() {
-//   return (
-//     <>
-//     <div className="flex w-full h justify-center ">
-          
-//             <div id="navbar" className="flex absolute w-9/10 bg-stone-300 rounded-md top-3 flex-row justify-center">
-              
-//                 <input type="text" className="bg-white rounded-full m-2"/>
-//                 <button className="bg-white rounded-sm m-2">search</button>
- 
-//                 <ul className="flex  flex-row-">
-//                     <NavLink to='/user/login'><li className="m-2">get started</li></NavLink>
-                   
-//                 </ul>
-//             </div>
-//     </div>
-//     </>
-//   )
-// }
-
-// export default Navbar
 
 
 import { useState } from "react";
