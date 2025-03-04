@@ -1,5 +1,29 @@
 # Generic E-Commerce Company
 
+## Milestone 6
+
+### Learning Goals 🎯
+- Implemented secure password encryption for user data
+- Set up complete user data storage in the database
+
+### Password Encryption Implementation
+- Integrated bcrypt for secure password hashing
+- Added pre-save middleware to automatically hash passwords
+- Implemented password comparison method for future login functionality
+- Followed security best practices for password storage
+
+### Database Enhancements
+- Added timestamps to track user creation and updates
+- Ensured email uniqueness in the database
+- Implemented secure password storage using bcrypt with salt rounds
+- Maintained support for profile image storage
+
+### Technical Details
+- Used bcrypt for password hashing with 10 salt rounds
+- Added mongoose middleware for automatic password encryption
+- Implemented comparePassword method for future authentication
+- Added timestamps for better user data tracking
+
 ## Milestone 5
 
 ### Learning Goals
