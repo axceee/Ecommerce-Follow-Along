@@ -6,11 +6,19 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <ul className="flex items-center justify-end space-x-6 py-4">
           <li>
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               className="text-purple-300 hover:text-purple-400 transition-colors duration-300 font-medium"
             >
               Home
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/product/create"
+              className="text-purple-300 hover:text-purple-400 transition-colors duration-300 font-medium"
+            >
+              Create Product
             </Link>
           </li>
           <li>
