@@ -4,10 +4,14 @@ import upload from '../config/multer.js';
 
 const router = express.Router();
 
-// Create a new user
-router.post('/users', upload.single('profileImage'), createUser);
+// Auth routes
+router.post('/auth/register', upload.single('profileImage'), createUser);
+router.post('/auth/login', (req, res) => {
+  // Login will be implemented in future milestone
+  res.status(501).json({ message: 'Not implemented yet' });
+});
 
-// Get user by ID
+// User routes
 router.get('/users/:id', getUserById);
 
 export default router;

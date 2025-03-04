@@ -6,6 +6,7 @@ const Navbar = () => {
       <ul className="flex space-x-4">
         <li><Link to="/" className="text-white">Home</Link></li>
         <li><Link to="/user/login" className="text-white">Login</Link></li>
+        <li><Link to="/user/signup" className="text-white">Sign Up</Link></li>
       </ul>
     </nav>
   );
