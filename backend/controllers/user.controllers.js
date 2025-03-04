@@ -1,6 +1,39 @@
 import User from '../models/user.models.js';
 import upload from '../config/multer.js';
 
+// User login
+export const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    // Compare password
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    // Return user data (exclude password)
+    const userWithoutPassword = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      profileImage: user.profileImage,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
+    };
+
+    res.json(userWithoutPassword);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 // Create a new user with profile image
 export const createUser = async (req, res) => {
   try {
