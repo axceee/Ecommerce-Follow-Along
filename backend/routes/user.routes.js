@@ -1,9 +1,13 @@
-import express from "express";
-import { findUser, registerUser } from "../controllers/user.controllers.js";
+import express from 'express';
+import { createUser, getUserById } from '../controllers/user.controllers';
+import upload from '../config/multer';
 
 const router = express.Router();
 
-router.post('/register',registerUser)
-router.get('/find',findUser)
+// Create a new user
+router.post('/users', upload.single('profileImage'), createUser);
 
-export default router
+// Get user by ID
+router.get('/users/:id', getUserById);
+
+export default router;
