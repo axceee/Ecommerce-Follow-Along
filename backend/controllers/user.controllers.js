@@ -1,5 +1,5 @@
-import User from '../models/user.models';
-import upload from '../config/multer';
+import User from '../models/user.models.js';
+import upload from '../config/multer.js';
 
 // Create a new user with profile image
 export const createUser = async (req, res) => {
