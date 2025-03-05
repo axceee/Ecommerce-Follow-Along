@@ -1,11 +1,17 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import ProductCard from '../../components/ProductCard'
 
 const MyProducts = () => {
+    const navigate = useNavigate()
     const [products, setProducts] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
     
+    const handleEdit = (productId) => {
+        navigate(`/create-product/${productId}`)
+    }
+
     const userEmail = localStorage.getItem('userEmail') // Get logged in user's email
 
     useEffect(() => {
@@ -51,10 +57,12 @@ const MyProducts = () => {
                     {products.map(product => (
                         <ProductCard
                             key={product._id}
+                            _id={product._id}
                             name={product.name}
                             description={product.description}
                             price={product.price}
                             image={product.imageUrl}
+                            onEdit={handleEdit}
                         />
                     ))}
                 </div>

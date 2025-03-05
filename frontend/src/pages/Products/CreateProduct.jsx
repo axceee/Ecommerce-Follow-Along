@@ -1,11 +1,42 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import "./CreateProduct.css"
 
 const CreateProduct = () => {
   const navigate = useNavigate()
+  const { productId } = useParams()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const isEditMode = !!productId
+
+  useEffect(() => {
+    if (isEditMode) {
+      fetchProductDetails()
+    }
+  }, [productId])
+
+  const fetchProductDetails = async () => {
+    try {
+      const response = await fetch(`http://localhost:8000/api/v1/products/${productId}`)
+      const data = await response.json()
+      
+      if (data.success) {
+        setProductData({
+          name: data.data.name,
+          description: data.data.description,
+          price: data.data.price,
+          category: data.data.category,
+          stockQuantity: data.data.stockQuantity,
+          imageUrl: data.data.imageUrl
+        })
+      } else {
+        setError("Failed to fetch product details")
+      }
+    } catch (err) {
+      setError("Error fetching product details")
+      console.error("Error fetching product:", err)
+    }
+  }
   
   const [productData, setProductData] = useState({
     name: '',
@@ -31,21 +62,26 @@ const CreateProduct = () => {
 
     const userEmail = localStorage.getItem('userEmail')
     if (!userEmail) {
-      setError("Please login to create a product")
+      setError("Please login to continue")
       setLoading(false)
       return
     }
 
     try {
-      const response = await fetch('http://localhost:8000/api/v1/products', {
-        method: 'POST',
+      const url = isEditMode
+        ? `http://localhost:8000/api/v1/products/${productId}`
+        : 'http://localhost:8000/api/v1/products'
+
+      const response = await fetch(url, {
+        method: isEditMode ? 'PUT' : 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...productData,
-          userEmail
-        })
+        body: JSON.stringify(
+          isEditMode
+            ? productData
+            : { ...productData, userEmail }
+        )
       })
 
       const data = await response.json()
@@ -53,11 +89,11 @@ const CreateProduct = () => {
       if (data.success) {
         navigate('/product/my-products')
       } else {
-        setError(data.message || "Failed to create product")
+        setError(data.message || `Failed to ${isEditMode ? 'update' : 'create'} product`)
       }
     } catch (err) {
-      setError("Error creating product. Please try again later.")
-      console.error("Error creating product:", err)
+      setError(`Error ${isEditMode ? 'updating' : 'creating'} product. Please try again later.`)
+      console.error(`Error ${isEditMode ? 'updating' : 'creating'} product:`, err)
     } finally {
       setLoading(false)
     }
@@ -65,7 +101,7 @@ const CreateProduct = () => {
 
   return (
     <div className="create-product-container">
-      <h2>Create New Product</h2>
+      <h2>{isEditMode ? 'Edit Product' : 'Create New Product'}</h2>
       {error && (
         <div className="text-red-500 text-center mb-4">
           {error}
@@ -149,7 +185,10 @@ const CreateProduct = () => {
           className="submit-button"
           disabled={loading}
         >
-          {loading ? 'Creating...' : 'Create Product'}
+          {loading
+            ? `${isEditMode ? 'Updating' : 'Creating'}...`
+            : `${isEditMode ? 'Update' : 'Create'} Product`
+          }
         </button>
       </form>
     </div>

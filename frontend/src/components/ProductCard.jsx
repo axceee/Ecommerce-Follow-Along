@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-const ProductCard = ({ image, name, price, description }) => {
+const ProductCard = ({ image, name, price, description, _id, onEdit }) => {
   return (
     <div className="max-w-sm rounded-lg overflow-hidden shadow-lg bg-gray-900 text-white border border-purple-500">
       <img 
@@ -17,9 +17,15 @@ const ProductCard = ({ image, name, price, description }) => {
           ${price}
         </p>
       </div>
-      <div className="px-6 py-4">
-        <button className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
+      <div className="px-6 py-4 flex gap-2">
+        <button className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
           Add to Cart
+        </button>
+        <button
+          onClick={() => onEdit(_id)}
+          className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
+        >
+          Edit
         </button>
       </div>
     </div>
@@ -30,7 +36,9 @@ ProductCard.propTypes = {
   image: PropTypes.string,
   name: PropTypes.string.isRequired,
   price: PropTypes.number.isRequired,
-  description: PropTypes.string.isRequired
+  description: PropTypes.string.isRequired,
+  _id: PropTypes.string.isRequired,
+  onEdit: PropTypes.func.isRequired
 };
 
 export default ProductCard;

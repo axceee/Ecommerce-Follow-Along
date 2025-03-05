@@ -68,9 +68,54 @@ const getProductById = asyncHandler(async (req, res) => {
     );
 });
 
+const updateProduct = asyncHandler(async (req, res) => {
+    const { productId } = req.params;
+    const {
+        name,
+        description,
+        price,
+        imageUrl,
+        category,
+        stockQuantity
+    } = req.body;
+
+    // Validation
+    if (
+        [name, description, price, imageUrl, category, stockQuantity].some(
+            field => field?.trim() === "" || field === undefined
+        )
+    ) {
+        throw new ApiError(400, "All fields are required");
+    }
+
+    const product = await Product.findByIdAndUpdate(
+        productId,
+        {
+            $set: {
+                name,
+                description,
+                price,
+                imageUrl,
+                category,
+                stockQuantity
+            }
+        },
+        { new: true }
+    );
+
+    if (!product) {
+        throw new ApiError(404, "Product not found");
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, product, "Product updated successfully")
+    );
+});
+
 export {
     createProduct,
     getAllProducts,
     getProductById,
-    getProductsByEmail
+    getProductsByEmail,
+    updateProduct
 };
