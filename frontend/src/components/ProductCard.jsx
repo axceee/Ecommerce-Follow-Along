@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-const ProductCard = ({ image, name, price, description, _id, onEdit }) => {
+const ProductCard = ({ image, name, price, description, _id, onEdit, onDelete }) => {
   return (
     <div className="max-w-sm rounded-lg overflow-hidden shadow-lg bg-gray-900 text-white border border-purple-500">
       <img 
@@ -18,7 +18,9 @@ const ProductCard = ({ image, name, price, description, _id, onEdit }) => {
         </p>
       </div>
       <div className="px-6 py-4 flex gap-2">
-        <button className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
+        <button
+          className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
+        >
           Add to Cart
         </button>
         <button
@@ -26,6 +28,12 @@ const ProductCard = ({ image, name, price, description, _id, onEdit }) => {
           className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
         >
           Edit
+        </button>
+        <button
+          onClick={() => onDelete(_id)}
+          className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
+        >
+          Delete
         </button>
       </div>
     </div>
@@ -38,7 +46,8 @@ ProductCard.propTypes = {
   price: PropTypes.number.isRequired,
   description: PropTypes.string.isRequired,
   _id: PropTypes.string.isRequired,
-  onEdit: PropTypes.func.isRequired
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired
 };
 
 export default ProductCard;

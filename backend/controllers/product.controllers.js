@@ -112,10 +112,25 @@ const updateProduct = asyncHandler(async (req, res) => {
     );
 });
 
+const deleteProduct = asyncHandler(async (req, res) => {
+    const { productId } = req.params;
+    
+    const product = await Product.findByIdAndDelete(productId);
+    
+    if (!product) {
+        throw new ApiError(404, "Product not found");
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, null, "Product deleted successfully")
+    );
+});
+
 export {
     createProduct,
     getAllProducts,
     getProductById,
     getProductsByEmail,
-    updateProduct
+    updateProduct,
+    deleteProduct
 };

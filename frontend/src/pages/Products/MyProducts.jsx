@@ -12,6 +12,28 @@ const MyProducts = () => {
         navigate(`/create-product/${productId}`)
     }
 
+    const handleDelete = async (productId) => {
+        try {
+            const response = await fetch(`http://localhost:8000/api/v1/products/${productId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                setProducts(products => products.filter(product => product._id !== productId));
+            } else {
+                setError(data.message || "Failed to delete product");
+            }
+        } catch (err) {
+            setError("Error deleting product. Please try again later.");
+            console.error("Error deleting product:", err);
+        }
+    }
+
     const userEmail = localStorage.getItem('userEmail') // Get logged in user's email
 
     useEffect(() => {
@@ -63,6 +85,7 @@ const MyProducts = () => {
                             price={product.price}
                             image={product.imageUrl}
                             onEdit={handleEdit}
+                            onDelete={handleDelete}
                         />
                     ))}
                 </div>
