@@ -1,14 +1,19 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import "./CreateProduct.css"
 
 const CreateProduct = () => {
+  const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  
   const [productData, setProductData] = useState({
     name: '',
     description: '',
     price: '',
     category: '',
-    stock: '',
-    images: []
+    stockQuantity: '',
+    imageUrl: ''
   })
 
   const handleInputChange = (e) => {
@@ -19,23 +24,53 @@ const CreateProduct = () => {
     }))
   }
 
-  const handleImageChange = (e) => {
-    const files = Array.from(e.target.files)
-    setProductData(prev => ({
-      ...prev,
-      images: files
-    }))
-  }
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log('Product Data:', productData)
-    // Will handle API integration later
+    setLoading(true)
+    setError(null)
+
+    const userEmail = localStorage.getItem('userEmail')
+    if (!userEmail) {
+      setError("Please login to create a product")
+      setLoading(false)
+      return
+    }
+
+    try {
+      const response = await fetch('http://localhost:8000/api/v1/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...productData,
+          userEmail
+        })
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        navigate('/product/my-products')
+      } else {
+        setError(data.message || "Failed to create product")
+      }
+    } catch (err) {
+      setError("Error creating product. Please try again later.")
+      console.error("Error creating product:", err)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
     <div className="create-product-container">
       <h2>Create New Product</h2>
+      {error && (
+        <div className="text-red-500 text-center mb-4">
+          {error}
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="product-form">
         <div className="form-group">
           <label htmlFor="name">Product Name</label>
@@ -85,32 +120,36 @@ const CreateProduct = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="stock">Stock</label>
+          <label htmlFor="stockQuantity">Stock Quantity</label>
           <input
             type="number"
-            id="stock"
-            name="stock"
-            value={productData.stock}
+            id="stockQuantity"
+            name="stockQuantity"
+            value={productData.stockQuantity}
             onChange={handleInputChange}
             required
           />
         </div>
 
         <div className="form-group">
-          <label htmlFor="images">Product Images</label>
+          <label htmlFor="imageUrl">Image URL</label>
           <input
-            type="file"
-            id="images"
-            name="images"
-            onChange={handleImageChange}
-            multiple
-            accept="image/*"
+            type="url"
+            id="imageUrl"
+            name="imageUrl"
+            value={productData.imageUrl}
+            onChange={handleInputChange}
+            placeholder="Enter image URL"
             required
           />
         </div>
 
-        <button type="submit" className="submit-button">
-          Create Product
+        <button
+          type="submit"
+          className="submit-button"
+          disabled={loading}
+        >
+          {loading ? 'Creating...' : 'Create Product'}
         </button>
       </form>
     </div>

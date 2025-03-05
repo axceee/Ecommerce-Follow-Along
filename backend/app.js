@@ -3,26 +3,38 @@ import mongoose from 'mongoose';
 import userRoutes from './routes/user.routes.js';
 import productRoutes from './routes/product.routes.js';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 dotenv.config();
 
 const app = express();
 
 // Middleware
+app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 
 // Routes
-app.use('/api/users', userRoutes);
-app.use('/api/products', productRoutes);
+app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/products', productRoutes);
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.log(err));
+// Error Handling Middleware
+app.use((err, req, res, next) => {
+  if (err?.name === "ValidationError") {
+    return res.status(400).json({
+      success: false,
+      message: err.message,
+      errors: Object.values(err.errors).map(error => error.message)
+    });
+  }
+  
+  return res.status(err.statusCode || 500).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+    errors: err.errors || []
+  });
+});
 
-// Start server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Export the app
 
 export default app

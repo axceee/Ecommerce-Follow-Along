@@ -1,7 +1,5 @@
 import { Product } from "../models/product.models.js";
-import { ApiError } from "../utils/ApiError.js";
-import { ApiResponse } from "../utils/ApiResponse.js";
-import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiError, ApiResponse, asyncHandler } from "../utils/index.js";
 
 const createProduct = asyncHandler(async (req, res) => {
     const {
@@ -10,12 +8,13 @@ const createProduct = asyncHandler(async (req, res) => {
         price,
         imageUrl,
         category,
-        stockQuantity
+        stockQuantity,
+        userEmail
     } = req.body;
 
     // Validation
     if (
-        [name, description, price, imageUrl, category, stockQuantity].some(
+        [name, description, price, imageUrl, category, stockQuantity, userEmail].some(
             field => field?.trim() === "" || field === undefined
         )
     ) {
@@ -29,11 +28,22 @@ const createProduct = asyncHandler(async (req, res) => {
         price,
         imageUrl,
         category,
-        stockQuantity
+        stockQuantity,
+        userEmail
     });
 
     return res.status(201).json(
         new ApiResponse(201, product, "Product created successfully")
+    );
+});
+
+const getProductsByEmail = asyncHandler(async (req, res) => {
+    const { userEmail } = req.params;
+    
+    const products = await Product.find({ userEmail });
+    
+    return res.status(200).json(
+        new ApiResponse(200, products, "Products fetched successfully")
     );
 });
 
@@ -61,5 +71,6 @@ const getProductById = asyncHandler(async (req, res) => {
 export {
     createProduct,
     getAllProducts,
-    getProductById
+    getProductById,
+    getProductsByEmail
 };

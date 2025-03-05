@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema({
+    userEmail: {
+        type: String,
+        required: [true, "User email is required"],
+        trim: true
+    },
     name: {
         type: String,
         required: [true, "Product name is required"],
