@@ -7,6 +7,7 @@ import Home from './pages/Home.jsx'
 import SignUp from './pages/header/SignUp.jsx'
 import CreateProduct from './pages/Products/CreateProduct.jsx'
 import MyProducts from './pages/Products/MyProducts.jsx'
+import ProductInfo from './pages/Products/ProductInfo.jsx'
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path='/product/create' element={<CreateProduct/>}/>
           <Route path='/my-products' element={<MyProducts/>}/>
           <Route path='/create-product/:productId' element={<CreateProduct/>}/>
+          <Route path='/product/:productId' element={<ProductInfo/>}/>
           <Route path='/cart' element={<div className="text-center text-2xl mt-10">Cart Page Coming Soon!</div>}/>
         </Routes>
       </main>
