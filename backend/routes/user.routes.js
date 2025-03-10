@@ -4,8 +4,8 @@ import upload from '../config/multer.js';
 
 const router = express.Router();
 
-router.post('/auth/register', upload.single('profileImage'), createUser);
-router.post('/auth/login', loginUser);
+router.post('/register', upload.single('profileImage'), createUser);
+router.post('/login', loginUser);
 
 router.get('/users/:id', getUserById);
 

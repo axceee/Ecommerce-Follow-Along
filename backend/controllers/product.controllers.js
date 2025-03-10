@@ -1,12 +1,12 @@
 import { Product } from "../models/product.models.js";
 import { ApiError, ApiResponse, asyncHandler } from "../utils/index.js";
+import { uploadOnCloudinary } from "../config/cloudinary.js";
 
 const createProduct = asyncHandler(async (req, res) => {
     const {
         name,
         description,
         price,
-        imageUrl,
         category,
         stockQuantity,
         userEmail
@@ -14,11 +14,20 @@ const createProduct = asyncHandler(async (req, res) => {
 
     // Validation
     if (
-        [name, description, price, imageUrl, category, stockQuantity, userEmail].some(
+        [name, description, price, category, stockQuantity, userEmail].some(
             field => field?.trim() === "" || field === undefined
         )
     ) {
         throw new ApiError(400, "All fields are required");
+    }
+
+    // Upload image to Cloudinary if file exists
+    let imageUrl = null;
+    if (req.file) {
+        imageUrl = await uploadOnCloudinary(req.file.path);
+        if (!imageUrl) {
+            throw new ApiError(400, "Error uploading image");
+        }
     }
 
     // Create product
@@ -74,32 +83,44 @@ const updateProduct = asyncHandler(async (req, res) => {
         name,
         description,
         price,
-        imageUrl,
         category,
         stockQuantity
     } = req.body;
 
     // Validation
     if (
-        [name, description, price, imageUrl, category, stockQuantity].some(
+        [name, description, price, category, stockQuantity].some(
             field => field?.trim() === "" || field === undefined
         )
     ) {
         throw new ApiError(400, "All fields are required");
     }
 
+    // Upload new image to Cloudinary if file exists
+    let imageUrl;
+    if (req.file) {
+        imageUrl = await uploadOnCloudinary(req.file.path);
+        if (!imageUrl) {
+            throw new ApiError(400, "Error uploading image");
+        }
+    }
+
+    const updateData = {
+        name,
+        description,
+        price,
+        category,
+        stockQuantity
+    };
+
+    // Only add imageUrl to update if a new image was uploaded
+    if (imageUrl) {
+        updateData.imageUrl = imageUrl;
+    }
+
     const product = await Product.findByIdAndUpdate(
         productId,
-        {
-            $set: {
-                name,
-                description,
-                price,
-                imageUrl,
-                category,
-                stockQuantity
-            }
-        },
+        { $set: updateData },
         { new: true }
     );
 

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import Navbar from './header/Navbar';
 import ProductCard from '../components/ProductCard';
 
 const Home = () => {
@@ -31,14 +30,13 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gray-900">
-      <Navbar />
       <header className="bg-purple-900 text-white py-12">
-        <div className="container mx-auto text-center px-4">
+        <div className="text-center">
           <h1 className="text-5xl font-bold text-purple-300">Generic E-Commerce Company</h1>
           <p className="mt-4 text-xl text-gray-300">Your one-stop shop for everything!</p>
         </div>
       </header>
-      <main className="container mx-auto py-12 px-4">
+      <main className="py-12">
         <section className="mb-12">
           <h2 className="text-3xl font-bold mb-6 text-purple-300">Featured Products</h2>
           {loading ? (

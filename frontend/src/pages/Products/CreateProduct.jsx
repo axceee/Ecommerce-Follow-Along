@@ -45,57 +45,75 @@ const CreateProduct = () => {
     category: '',
     stockQuantity: '',
     imageUrl: ''
-  })
+  });
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setProductData(prev => ({
       ...prev,
       [name]: value
-    }))
+    }));
+  }
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
 
-    const userEmail = localStorage.getItem('userEmail')
+    const userEmail = localStorage.getItem('userEmail');
     if (!userEmail) {
-      setError("Please login to continue")
-      setLoading(false)
-      return
+      setError("Please login to continue");
+      setLoading(false);
+      return;
     }
 
     try {
+      const formData = new FormData();
+      formData.append('name', productData.name);
+      formData.append('description', productData.description);
+      formData.append('price', productData.price);
+      formData.append('category', productData.category);
+      formData.append('stockQuantity', productData.stockQuantity);
+      
+      if (selectedImage) {
+        formData.append('image', selectedImage);
+      }
+
+      if (!isEditMode) {
+        formData.append('userEmail', userEmail);
+      }
+
       const url = isEditMode
         ? `http://localhost:8000/api/v1/products/${productId}`
-        : 'http://localhost:8000/api/v1/products'
+        : 'http://localhost:8000/api/v1/products';
 
       const response = await fetch(url, {
         method: isEditMode ? 'PUT' : 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(
-          isEditMode
-            ? productData
-            : { ...productData, userEmail }
-        )
-      })
+        body: formData // FormData automatically sets the correct Content-Type
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (data.success) {
-        navigate('/product/my-products')
+        navigate('/my-products');
       } else {
-        setError(data.message || `Failed to ${isEditMode ? 'update' : 'create'} product`)
+        setError(data.message || `Failed to ${isEditMode ? 'update' : 'create'} product`);
       }
     } catch (err) {
-      setError(`Error ${isEditMode ? 'updating' : 'creating'} product. Please try again later.`)
-      console.error(`Error ${isEditMode ? 'updating' : 'creating'} product:`, err)
+      setError(`Error ${isEditMode ? 'updating' : 'creating'} product. Please try again later.`);
+      console.error(`Error ${isEditMode ? 'updating' : 'creating'} product:`, err);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -168,16 +186,34 @@ const CreateProduct = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="imageUrl">Image URL</label>
+          <label htmlFor="image">Product Image</label>
           <input
-            type="url"
-            id="imageUrl"
-            name="imageUrl"
-            value={productData.imageUrl}
-            onChange={handleInputChange}
-            placeholder="Enter image URL"
-            required
+            type="file"
+            id="image"
+            name="image"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="mb-2"
+            required={!isEditMode}
           />
+          {imagePreview && (
+            <div className="mt-2">
+              <img
+                src={imagePreview}
+                alt="Preview"
+                className="max-w-xs h-auto rounded-lg shadow-md"
+              />
+            </div>
+          )}
+          {!imagePreview && productData.imageUrl && (
+            <div className="mt-2">
+              <img
+                src={productData.imageUrl}
+                alt="Current Product"
+                className="max-w-xs h-auto rounded-lg shadow-md"
+              />
+            </div>
+          )}
         </div>
 
         <button
