@@ -133,3 +133,59 @@ export const getUserById = async (req, res) => {
     });
   }
 };
+
+// Add product to cart
+export const addToCart = async (req, res) => {
+  try {
+    const { userId, productId, quantity = 1 } = req.body;
+
+    if (!userId || !productId) {
+      return res.status(400).json({
+        success: false,
+        message: 'User ID and Product ID are required'
+      });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    // Check if product already exists in cart
+    const existingCartItem = user.cart.find(item =>
+      item.product.toString() === productId
+    );
+
+    if (existingCartItem) {
+      // Update quantity if product exists
+      existingCartItem.quantity += Number(quantity);
+    } else {
+      // Add new product to cart
+      user.cart.push({
+        product: productId,
+        quantity: Number(quantity)
+      });
+    }
+
+    await user.save();
+
+    const populatedUser = await User.findById(userId)
+      .populate('cart.product')
+      .select('-password');
+
+    return res.status(200).json({
+      success: true,
+      message: 'Product added to cart successfully',
+      data: populatedUser.cart
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error adding product to cart',
+      error: error.message
+    });
+  }
+};
